@@ -1,7 +1,8 @@
 <?php
 session_start(); // Inicia sesión
 
-$conexion = mysqli_connect("localhost", "root", "", "ventas_hamburguesa");
+require_once 'config.php';
+$conexion = getConnection();
 
 if (!$conexion) {
     die("Error de conexión: " . mysqli_connect_error());
@@ -18,7 +19,7 @@ if (isset($_POST['NOMB_USUARIO']) && isset($_POST['CORREO']) && isset($_POST['CL
             VALUES ('$NOMB_USUARIO', '$CORREO','$CLAVE')";
 
     if ($conexion->query($sql) === TRUE) {
-        $_SESSION['nombre'] = $NOMB_USUARIO; // Guardamos el nombre del usuario en sesión
+        $_SESSION['usuario'] = $NOMB_USUARIO; // Guardamos el nombre del usuario en sesión
         header("Location: plataforma.php"); // Redirige al usuario a la plataforma
         exit();
     } else {

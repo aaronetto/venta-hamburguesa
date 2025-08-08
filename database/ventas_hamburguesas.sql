@@ -102,21 +102,22 @@ INSERT INTO `pedido` (`ID_PEDIDO`, `FECHA_PEDIDO`, `TOTAL`, `ID_USUARIO`) VALUES
 CREATE TABLE `producto` (
   `ID_PRODUCTO` int(11) NOT NULL,
   `NOMB_PRODUCTO` varchar(100) NOT NULL,
-  `ID_CATEGORIA` int(11) NOT NULL
+  `ID_CATEGORIA` int(11) NOT NULL,
+  `PRECIO` decimal(6,2) NOT NULL DEFAULT 0.00
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `producto`
 --
 
-INSERT INTO `producto` (`ID_PRODUCTO`, `NOMB_PRODUCTO`, `ID_CATEGORIA`) VALUES
-(1, 'Hamburguesa Clásica', 1),
-(2, 'Hamburguesa con Queso', 1),
-(3, 'Hamburguesa Doble Carne', 1),
-(4, 'Combo Clásico', 2),
-(7, 'Pepsi Jumbo', 3),
-(8, 'Inca Kola 500ml', 3),
-(9, 'Agua mineral sin gas 500ml', 3);
+INSERT INTO `producto` (`ID_PRODUCTO`, `NOMB_PRODUCTO`, `ID_CATEGORIA`, `PRECIO`) VALUES
+(1, 'Hamburguesa Clásica', 1, 15.90),
+(2, 'Hamburguesa con Queso', 1, 22.50),
+(3, 'Hamburguesa Doble Carne', 1, 15.00),
+(4, 'Combo Clásico', 2, 25.00),
+(7, 'Pepsi Jumbo', 3, 8.00),
+(8, 'Inca Kola 500ml', 3, 5.00),
+(9, 'Agua mineral sin gas 500ml', 3, 3.00);
 
 -- --------------------------------------------------------
 
@@ -128,7 +129,7 @@ CREATE TABLE `usuario` (
   `ID_USUARIO` int(11) NOT NULL,
   `NOMB_USUARIO` varchar(100) DEFAULT NULL,
   `CORREO` varchar(100) DEFAULT NULL,
-  `CLAVE` varchar(100) DEFAULT NULL
+  `CLAVE` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -136,11 +137,11 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`ID_USUARIO`, `NOMB_USUARIO`, `CORREO`, `CLAVE`) VALUES
-(1, 'Carlos Pérez Gomez', 'carlos@gmail.com', '1234'),
-(2, 'Lucía Ramos Zevallos', 'lucia.ramos@hotmail.com', 'abcd'),
-(3, 'Diego Torres Buenaventura', 'diego.torres@outlook.com', '123'),
-(4, 'María González Molina', 'maria.g@gmail.com', 'admin'),
-(5, 'Pedro Salas Vargas', 'pedro.salas@yahoo.com', '2025');
+(1, 'Carlos Pérez Gomez', 'carlos@gmail.com', '$2y$10$yvY3RVvLugOzV5BGGbY6ve2VoaXdhyZz0mKTQivVT2SFjGlCwEn6q'),
+(2, 'Lucía Ramos Zevallos', 'lucia.ramos@hotmail.com', '$2y$10$yvY3RVvLugOzV5BGGbY6ve2VoaXdhyZz0mKTQivVT2SFjGlCwEn6q'),
+(3, 'Diego Torres Buenaventura', 'diego.torres@outlook.com', '$2y$10$yvY3RVvLugOzV5BGGbY6ve2VoaXdhyZz0mKTQivVT2SFjGlCwEn6q'),
+(4, 'María González Molina', 'maria.g@gmail.com', '$2y$10$yvY3RVvLugOzV5BGGbY6ve2VoaXdhyZz0mKTQivVT2SFjGlCwEn6q'),
+(5, 'Pedro Salas Vargas', 'pedro.salas@yahoo.com', '$2y$10$yvY3RVvLugOzV5BGGbY6ve2VoaXdhyZz0mKTQivVT2SFjGlCwEn6q');
 
 --
 -- Índices para tablas volcadas
@@ -207,6 +208,13 @@ ALTER TABLE `pedido`
 --
 ALTER TABLE `producto`
   MODIFY `ID_PRODUCTO` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+COMMIT;
+
+--
+-- AUTO_INCREMENT de la tabla `usuario`
+--
+ALTER TABLE `usuario`
+  MODIFY `ID_USUARIO` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
