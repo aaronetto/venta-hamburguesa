@@ -59,7 +59,7 @@ if (isset($_POST['NOMBRES']) && isset($_POST['APELLIDOS']) && isset($_POST['CORR
         // Guardar información del usuario en sesión
         $_SESSION['usuario'] = $nombres . ' ' . $apellidos;
         $_SESSION['usuario_id'] = $usuario_id;
-        $_SESSION['usuario_rol'] = $rol;
+        $_SESSION['rol'] = $rol;
         $_SESSION['usuario_correo'] = $correo;
         
         header("Location: plataforma.php");

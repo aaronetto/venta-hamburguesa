@@ -4,7 +4,7 @@ session_start();
 // Limpiar todas las variables de sesión específicas
 unset($_SESSION['usuario']);
 unset($_SESSION['usuario_id']);
-unset($_SESSION['usuario_rol']);
+unset($_SESSION['rol']);
 unset($_SESSION['usuario_correo']);
 
 // Destruir la sesión completamente
