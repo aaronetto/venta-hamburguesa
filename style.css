@@ -303,11 +303,6 @@ p{
     width: 50%;
 }
 
-form {
-    display: flex;
-    align-items: center;
-}
-
 input {
     width: 450px;
     padding: 15px;

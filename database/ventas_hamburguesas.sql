@@ -1,222 +1,416 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
---
--- Servidor: 127.0.0.1
--- Tiempo de generación: 04-08-2025 a las 03:41:16
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- MySQL Workbench Forward Engineering
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema ventas_hamburguesa
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema ventas_hamburguesa
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `ventas_hamburguesa` DEFAULT CHARACTER SET utf8 ;
+-- -----------------------------------------------------
+-- Schema ventas_hamburguesa
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema ventas_hamburguesa
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `ventas_hamburguesa` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+USE `ventas_hamburguesa` ;
+
+-- -----------------------------------------------------
+-- Table `ventas_hamburguesa`.`cliente`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `ventas_hamburguesa`.`cliente` ;
+
+CREATE TABLE IF NOT EXISTS `ventas_hamburguesa`.`cliente` (
+  `ID_CLIENTE` INT NOT NULL AUTO_INCREMENT,
+  `NOMBRE` VARCHAR(45) NULL,
+  `APELLIDOS` VARCHAR(45) NULL,
+  `CORREO` VARCHAR(45) NULL,
+  `TELEFONO` VARCHAR(45) NULL,
+  `DIRECCION` VARCHAR(45) NULL,
+  PRIMARY KEY (`ID_CLIENTE`))
+ENGINE = InnoDB;
 
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+-- -----------------------------------------------------
+-- Table `ventas_hamburguesa`.`ciudad`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `ventas_hamburguesa`.`ciudad` ;
 
---
--- Base de datos: `ventas_hamburguesa`
---
+CREATE TABLE IF NOT EXISTS `ventas_hamburguesa`.`ciudad` (
+  `ID_CIUDAD` INT NOT NULL AUTO_INCREMENT,
+  `NOMBRE` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`ID_CIUDAD`),
+  UNIQUE INDEX `NOMBRE_UNIQUE` (`NOMBRE` ASC) VISIBLE)
+ENGINE = InnoDB;
 
--- --------------------------------------------------------
 
---
--- Estructura de tabla para la tabla `categoria`
---
+-- -----------------------------------------------------
+-- Table `ventas_hamburguesa`.`provincia`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `ventas_hamburguesa`.`provincia` ;
 
-CREATE TABLE `categoria` (
-  `ID_CATEGORIA` int(11) NOT NULL,
-  `NOMB_CATEGORIA` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+CREATE TABLE IF NOT EXISTS `ventas_hamburguesa`.`provincia` (
+  `ID_PROVINCIA` INT NOT NULL AUTO_INCREMENT,
+  `NOMBRE` VARCHAR(45) NOT NULL,
+  `ID_CIUDAD` INT NOT NULL,
+  PRIMARY KEY (`ID_PROVINCIA`),
+  INDEX `fk_provincia_ciudad_idx` (`ID_CIUDAD` ASC) VISIBLE,
+  CONSTRAINT `fk_provincia_ciudad`
+    FOREIGN KEY (`ID_CIUDAD`)
+    REFERENCES `ventas_hamburguesa`.`ciudad` (`ID_CIUDAD`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
---
--- Volcado de datos para la tabla `categoria`
---
 
-INSERT INTO `categoria` (`ID_CATEGORIA`, `NOMB_CATEGORIA`) VALUES
-(1, 'Hamburguesas'),
-(2, 'Combos'),
-(3, 'Bebidas');
+-- -----------------------------------------------------
+-- Table `ventas_hamburguesa`.`distrito`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `ventas_hamburguesa`.`distrito` ;
 
--- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ventas_hamburguesa`.`distrito` (
+  `ID_DISTRITO` INT NOT NULL AUTO_INCREMENT,
+  `NOMBRE` VARCHAR(45) NOT NULL,
+  `ID_PROVINCIA` INT NOT NULL,
+  PRIMARY KEY (`ID_DISTRITO`),
+  INDEX `fk_distrito_provincia1_idx` (`ID_PROVINCIA` ASC) VISIBLE,
+  CONSTRAINT `fk_distrito_provincia1`
+    FOREIGN KEY (`ID_PROVINCIA`)
+    REFERENCES `ventas_hamburguesa`.`provincia` (`ID_PROVINCIA`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
---
--- Estructura de tabla para la tabla `detalle_pedido`
---
 
-CREATE TABLE `detalle_pedido` (
-  `ID_DETALLE` int(11) NOT NULL,
-  `ID_PEDIDO` int(11) NOT NULL,
-  `ID_PRODUCTO` int(11) NOT NULL,
-  `CANTIDAD` int(11) NOT NULL,
-  `SUBTOTAL` decimal(6,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- -----------------------------------------------------
+-- Table `ventas_hamburguesa`.`direccion_cliente`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `ventas_hamburguesa`.`direccion_cliente` ;
 
---
--- Volcado de datos para la tabla `detalle_pedido`
---
+CREATE TABLE IF NOT EXISTS `ventas_hamburguesa`.`direccion_cliente` (
+  `ID_DIRECCION_CLIENTE` INT NOT NULL AUTO_INCREMENT,
+  `CALLE` VARCHAR(45) NOT NULL,
+  `NUMERO` VARCHAR(45) NOT NULL,
+  `ID_DISTRITO` INT NOT NULL,
+  `ID_CLIENTE` INT NOT NULL,
+  PRIMARY KEY (`ID_DIRECCION_CLIENTE`, `ID_DISTRITO`),
+  INDEX `fk_direccion_cliente_distrito1_idx` (`ID_DISTRITO` ASC) VISIBLE,
+  INDEX `fk_direccion_cliente_cliente1_idx` (`ID_CLIENTE` ASC) VISIBLE,
+  CONSTRAINT `fk_direccion_cliente_distrito1`
+    FOREIGN KEY (`ID_DISTRITO`)
+    REFERENCES `ventas_hamburguesa`.`distrito` (`ID_DISTRITO`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_direccion_cliente_cliente1`
+    FOREIGN KEY (`ID_CLIENTE`)
+    REFERENCES `ventas_hamburguesa`.`cliente` (`ID_CLIENTE`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
-INSERT INTO `detalle_pedido` (`ID_DETALLE`, `ID_PEDIDO`, `ID_PRODUCTO`, `CANTIDAD`, `SUBTOTAL`) VALUES
-(1, 1, 1, 1, 15.90),
-(2, 1, 3, 1, 8.00),
-(3, 2, 2, 1, 22.50),
-(4, 2, 3, 1, 8.00),
-(5, 3, 1, 1, 15.00),
-(6, 4, 1, 2, 31.80),
-(7, 4, 2, 1, 13.95),
-(8, 5, 3, 2, 10.00);
 
--- --------------------------------------------------------
+-- -----------------------------------------------------
+-- Table `ventas_hamburguesa`.`proveedor`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `ventas_hamburguesa`.`proveedor` ;
 
---
--- Estructura de tabla para la tabla `pedido`
---
+CREATE TABLE IF NOT EXISTS `ventas_hamburguesa`.`proveedor` (
+  `ID_PROVEEDOR` INT NOT NULL AUTO_INCREMENT,
+  `NOMBRE` VARCHAR(100) NOT NULL,
+  `RAZON_SOCIAL` VARCHAR(100) NOT NULL,
+  `NUMERO_DOCUMENTO` VARCHAR(11) NOT NULL,
+  `DIRECCION` VARCHAR(255) NOT NULL,
+  `TELEFONO` VARCHAR(255) NOT NULL,
+  `CORREO` VARCHAR(255) NOT NULL,
+  `SITIO_WEB` VARCHAR(255) NULL,
+  `CONTACTO_NOMBRES` VARCHAR(100) NOT NULL,
+  `CONTACTO_APELLIDOS` VARCHAR(100) NULL,
+  PRIMARY KEY (`ID_PROVEEDOR`),
+  UNIQUE INDEX `NUMERO_DOCUMENTO_UNIQUE` (`NUMERO_DOCUMENTO` ASC) VISIBLE)
+ENGINE = InnoDB;
 
-CREATE TABLE `pedido` (
-  `ID_PEDIDO` int(11) NOT NULL,
-  `FECHA_PEDIDO` date NOT NULL,
-  `TOTAL` decimal(6,2) NOT NULL,
-  `ID_USUARIO` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+USE `ventas_hamburguesa` ;
 
---
--- Volcado de datos para la tabla `pedido`
---
+-- -----------------------------------------------------
+-- Table `ventas_hamburguesa`.`categoria`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `ventas_hamburguesa`.`categoria` ;
 
-INSERT INTO `pedido` (`ID_PEDIDO`, `FECHA_PEDIDO`, `TOTAL`, `ID_USUARIO`) VALUES
-(1, '2025-08-01', 23.90, 1),
-(2, '2025-07-20', 30.50, 2),
-(3, '2025-07-31', 15.00, 3),
-(4, '2025-08-03', 45.75, 1),
-(5, '2025-08-04', 18.00, 4);
+CREATE TABLE IF NOT EXISTS `ventas_hamburguesa`.`categoria` (
+  `ID_CATEGORIA` INT NOT NULL AUTO_INCREMENT,
+  `NOMBRE` VARCHAR(100) NOT NULL,
+  `DESCRIPCION` TEXT NULL,
+  `ACTIVO` TINYINT NOT NULL DEFAULT 1,
+  `FECHA_CREACION` TIMESTAMP NOT NULL,
+  `FECHA_ACTUALIZACION` TIMESTAMP NULL,
+  PRIMARY KEY (`ID_CATEGORIA`),
+  UNIQUE INDEX `NOMBRE_UNIQUE` (`NOMBRE` ASC) VISIBLE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 6
+DEFAULT CHARACTER SET = utf8mb4;
 
--- --------------------------------------------------------
 
---
--- Estructura de tabla para la tabla `producto`
---
+-- -----------------------------------------------------
+-- Table `ventas_hamburguesa`.`usuario`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `ventas_hamburguesa`.`usuario` ;
 
-CREATE TABLE `producto` (
-  `ID_PRODUCTO` int(11) NOT NULL,
-  `NOMB_PRODUCTO` varchar(100) NOT NULL,
-  `ID_CATEGORIA` int(11) NOT NULL,
-  `PRECIO` decimal(6,2) NOT NULL DEFAULT 0.00
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+CREATE TABLE IF NOT EXISTS `ventas_hamburguesa`.`usuario` (
+  `ID_USUARIO` INT NOT NULL AUTO_INCREMENT,
+  `NOMBRES` VARCHAR(100) NOT NULL,
+  `APELLIDOS` VARCHAR(100) NOT NULL,
+  `CORREO` VARCHAR(100) NOT NULL,
+  `CLAVE` VARCHAR(255) NOT NULL,
+  `ROL` ENUM('ADMINISTRADOR', 'GERENTE', 'ASISTENTE') NOT NULL,
+  `ACTIVO` TINYINT NOT NULL DEFAULT 1,
+  PRIMARY KEY (`ID_USUARIO`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 6
+DEFAULT CHARACTER SET = utf8mb4;
 
---
--- Volcado de datos para la tabla `producto`
---
 
-INSERT INTO `producto` (`ID_PRODUCTO`, `NOMB_PRODUCTO`, `ID_CATEGORIA`, `PRECIO`) VALUES
-(1, 'Hamburguesa Clásica', 1, 15.90),
-(2, 'Hamburguesa con Queso', 1, 22.50),
-(3, 'Hamburguesa Doble Carne', 1, 15.00),
-(4, 'Combo Clásico', 2, 25.00),
-(7, 'Pepsi Jumbo', 3, 8.00),
-(8, 'Inca Kola 500ml', 3, 5.00),
-(9, 'Agua mineral sin gas 500ml', 3, 3.00);
+-- -----------------------------------------------------
+-- Table `ventas_hamburguesa`.`pedido`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `ventas_hamburguesa`.`pedido` ;
 
--- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ventas_hamburguesa`.`pedido` (
+  `ID_PEDIDO` INT NOT NULL AUTO_INCREMENT,
+  `METODO_PAGO` ENUM('EFECTIVO', 'TARJETA', 'YAPE') NOT NULL DEFAULT 'EFECTIVO',
+  `FECHA_PEDIDO` DATE NOT NULL,
+  `TOTAL` DECIMAL(10,2) NOT NULL DEFAULT 0,
+  `ID_CLIENTE` INT NOT NULL,
+  `ESTADO` ENUM('PENDIENTE', 'LISTO', 'CANCELADO') NOT NULL DEFAULT 'PENDIENTE',
+  `OBSERVACIONES` TEXT NULL,
+  `FECHA_ENTREGA` DATETIME NOT NULL,
+  `FECHA_CREACION` TIMESTAMP NOT NULL,
+  `FECHA_ACTUALIZACION` TIMESTAMP NULL,
+  `ID_USUARIO` INT NOT NULL,
+  PRIMARY KEY (`ID_PEDIDO`),
+  INDEX `fk_pedido_cliente1_idx` (`ID_CLIENTE` ASC) VISIBLE,
+  INDEX `fk_pedido_usuario1_idx` (`ID_USUARIO` ASC) VISIBLE,
+  CONSTRAINT `fk_pedido_cliente1`
+    FOREIGN KEY (`ID_CLIENTE`)
+    REFERENCES `ventas_hamburguesa`.`cliente` (`ID_CLIENTE`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_pedido_usuario1`
+    FOREIGN KEY (`ID_USUARIO`)
+    REFERENCES `ventas_hamburguesa`.`usuario` (`ID_USUARIO`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+AUTO_INCREMENT = 7
+DEFAULT CHARACTER SET = utf8mb4;
 
---
--- Estructura de tabla para la tabla `usuario`
---
 
-CREATE TABLE `usuario` (
-  `ID_USUARIO` int(11) NOT NULL,
-  `NOMB_USUARIO` varchar(100) DEFAULT NULL,
-  `CORREO` varchar(100) DEFAULT NULL,
-  `CLAVE` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- -----------------------------------------------------
+-- Table `ventas_hamburguesa`.`producto`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `ventas_hamburguesa`.`producto` ;
 
---
--- Volcado de datos para la tabla `usuario`
---
+CREATE TABLE IF NOT EXISTS `ventas_hamburguesa`.`producto` (
+  `ID_PRODUCTO` INT NOT NULL AUTO_INCREMENT,
+  `CODIGO` VARCHAR(100) NOT NULL,
+  `NOMBRE` VARCHAR(100) NOT NULL,
+  `PRECIO` DECIMAL(6,2) NOT NULL DEFAULT '0.00',
+  `DESCRIPCIOON` TEXT NULL,
+  `IMAGEN_RUTA` VARCHAR(255) NULL,
+  `STOCK` INT NOT NULL DEFAULT 0,
+  `ACTIVO` TINYINT NOT NULL DEFAULT 1,
+  `FECHA_CREACION` TIMESTAMP NOT NULL,
+  `FECHA_ACTUALIZACION` TIMESTAMP NULL,
+  `ID_CATEGORIA` INT NOT NULL,
+  `ID_PROVEEDOR` INT NOT NULL,
+  PRIMARY KEY (`ID_PRODUCTO`),
+  UNIQUE INDEX `NOMBRE_UNIQUE` (`NOMBRE` ASC) VISIBLE,
+  INDEX `fk_producto_categoria_idx` (`ID_CATEGORIA` ASC) VISIBLE,
+  INDEX `fk_producto_proveedor1_idx` (`ID_PROVEEDOR` ASC) VISIBLE,
+  CONSTRAINT `fk_producto_categoria`
+    FOREIGN KEY (`ID_CATEGORIA`)
+    REFERENCES `ventas_hamburguesa`.`categoria` (`ID_CATEGORIA`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_producto_proveedor1`
+    FOREIGN KEY (`ID_PROVEEDOR`)
+    REFERENCES `ventas_hamburguesa`.`proveedor` (`ID_PROVEEDOR`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+AUTO_INCREMENT = 11
+DEFAULT CHARACTER SET = utf8mb4;
 
-INSERT INTO `usuario` (`ID_USUARIO`, `NOMB_USUARIO`, `CORREO`, `CLAVE`) VALUES
-(1, 'Carlos Pérez Gomez', 'carlos@gmail.com', '$2y$10$yvY3RVvLugOzV5BGGbY6ve2VoaXdhyZz0mKTQivVT2SFjGlCwEn6q'),
-(2, 'Lucía Ramos Zevallos', 'lucia.ramos@hotmail.com', '$2y$10$yvY3RVvLugOzV5BGGbY6ve2VoaXdhyZz0mKTQivVT2SFjGlCwEn6q'),
-(3, 'Diego Torres Buenaventura', 'diego.torres@outlook.com', '$2y$10$yvY3RVvLugOzV5BGGbY6ve2VoaXdhyZz0mKTQivVT2SFjGlCwEn6q'),
-(4, 'María González Molina', 'maria.g@gmail.com', '$2y$10$yvY3RVvLugOzV5BGGbY6ve2VoaXdhyZz0mKTQivVT2SFjGlCwEn6q'),
-(5, 'Pedro Salas Vargas', 'pedro.salas@yahoo.com', '$2y$10$yvY3RVvLugOzV5BGGbY6ve2VoaXdhyZz0mKTQivVT2SFjGlCwEn6q');
 
---
--- Índices para tablas volcadas
---
+-- -----------------------------------------------------
+-- Table `ventas_hamburguesa`.`pedido_detalle`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `ventas_hamburguesa`.`pedido_detalle` ;
 
---
--- Indices de la tabla `categoria`
---
-ALTER TABLE `categoria`
-  ADD PRIMARY KEY (`ID_CATEGORIA`);
+CREATE TABLE IF NOT EXISTS `ventas_hamburguesa`.`pedido_detalle` (
+  `ID_PEDIDO_DETALLE` INT NOT NULL AUTO_INCREMENT,
+  `CANTIDAD` INT NOT NULL,
+  `ID_PEDIDO` INT NOT NULL,
+  `ID_PRODUCTO` INT NOT NULL,
+  `PRECIO_UNITARIO` DECIMAL(6,2) NOT NULL DEFAULT 0,
+  `SUBTOTAL` DECIMAL(10,2) NOT NULL DEFAULT 0,
+  `OBSERVACIONES` TEXT NULL,
+  PRIMARY KEY (`ID_PEDIDO_DETALLE`),
+  INDEX `fk_pedido_detalle_pedido1_idx` (`ID_PEDIDO` ASC) VISIBLE,
+  INDEX `fk_pedido_detalle_producto1_idx` (`ID_PRODUCTO` ASC) VISIBLE,
+  CONSTRAINT `fk_pedido_detalle_pedido1`
+    FOREIGN KEY (`ID_PEDIDO`)
+    REFERENCES `ventas_hamburguesa`.`pedido` (`ID_PEDIDO`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_pedido_detalle_producto1`
+    FOREIGN KEY (`ID_PRODUCTO`)
+    REFERENCES `ventas_hamburguesa`.`producto` (`ID_PRODUCTO`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+AUTO_INCREMENT = 10
+DEFAULT CHARACTER SET = utf8mb4;
 
---
--- Indices de la tabla `detalle_pedido`
---
-ALTER TABLE `detalle_pedido`
-  ADD PRIMARY KEY (`ID_DETALLE`),
-  ADD KEY `ID_PEDIDO` (`ID_PEDIDO`),
-  ADD KEY `ID_PRODUCTO` (`ID_PRODUCTO`);
 
---
--- Indices de la tabla `pedido`
---
-ALTER TABLE `pedido`
-  ADD PRIMARY KEY (`ID_PEDIDO`),
-  ADD KEY `ID_USUARIO` (`ID_USUARIO`);
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
---
--- Indices de la tabla `producto`
---
-ALTER TABLE `producto`
-  ADD PRIMARY KEY (`ID_PRODUCTO`),
-  ADD KEY `ID_CATEGORIA` (`ID_CATEGORIA`);
+-- -----------------------------------------------------
+-- DATOS INSERT IMPORTADOS DESDE ventas_hamburguesas.sql
+-- -----------------------------------------------------
 
---
--- Indices de la tabla `usuario`
---
-ALTER TABLE `usuario`
-  ADD PRIMARY KEY (`ID_USUARIO`);
+USE `ventas_hamburguesa`;
 
---
--- AUTO_INCREMENT de las tablas volcadas
---
+-- -----------------------------------------------------
+-- Datos para tabla `ventas_hamburguesa`.`ciudad`
+-- -----------------------------------------------------
+INSERT INTO `ventas_hamburguesa`.`ciudad` (`ID_CIUDAD`, `NOMBRE`) VALUES
+(1, 'Lima'),
+(2, 'Arequipa'),
+(3, 'Trujillo'),
+(4, 'Chiclayo'),
+(5, 'Piura');
 
---
--- AUTO_INCREMENT de la tabla `categoria`
---
-ALTER TABLE `categoria`
-  MODIFY `ID_CATEGORIA` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+-- -----------------------------------------------------
+-- Datos para tabla `ventas_hamburguesa`.`provincia`
+-- -----------------------------------------------------
+INSERT INTO `ventas_hamburguesa`.`provincia` (`ID_PROVINCIA`, `NOMBRE`, `ID_CIUDAD`) VALUES
+(1, 'Lima', 1),
+(2, 'Callao', 1),
+(3, 'Arequipa', 2),
+(4, 'Trujillo', 3),
+(5, 'Chiclayo', 4);
 
---
--- AUTO_INCREMENT de la tabla `detalle_pedido`
---
-ALTER TABLE `detalle_pedido`
-  MODIFY `ID_DETALLE` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+-- -----------------------------------------------------
+-- Datos para tabla `ventas_hamburguesa`.`distrito`
+-- -----------------------------------------------------
+INSERT INTO `ventas_hamburguesa`.`distrito` (`ID_DISTRITO`, `NOMBRE`, `ID_PROVINCIA`) VALUES
+(1, 'Miraflores', 1),
+(2, 'San Isidro', 1),
+(3, 'Barranco', 1),
+(4, 'Callao', 2),
+(5, 'Bellavista', 2);
 
---
--- AUTO_INCREMENT de la tabla `pedido`
---
-ALTER TABLE `pedido`
-  MODIFY `ID_PEDIDO` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+-- -----------------------------------------------------
+-- Datos para tabla `ventas_hamburguesa`.`cliente`
+-- -----------------------------------------------------
+INSERT INTO `ventas_hamburguesa`.`cliente` (`ID_CLIENTE`, `NOMBRE`, `APELLIDOS`, `CORREO`, `TELEFONO`, `DIRECCION`) VALUES
+(1, 'Carlos', 'Pérez Gomez', 'carlos@gmail.com', '999888777', 'Av. Larco 123'),
+(2, 'Lucía', 'Ramos Zevallos', 'lucia.ramos@hotmail.com', '999888776', 'Av. Arequipa 456'),
+(3, 'Diego', 'Torres Buenaventura', 'diego.torres@outlook.com', '999888775', 'Av. Tacna 789'),
+(4, 'María', 'González Molina', 'maria.g@gmail.com', '999888774', 'Av. Grau 321'),
+(5, 'Pedro', 'Salas Vargas', 'pedro.salas@yahoo.com', '999888773', 'Av. Abancay 654');
 
---
--- AUTO_INCREMENT de la tabla `producto`
---
-ALTER TABLE `producto`
-  MODIFY `ID_PRODUCTO` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
-COMMIT;
+-- -----------------------------------------------------
+-- Datos para tabla `ventas_hamburguesa`.`direccion_cliente`
+-- -----------------------------------------------------
+INSERT INTO `ventas_hamburguesa`.`direccion_cliente` (`ID_DIRECCION_CLIENTE`, `CALLE`, `NUMERO`, `ID_DISTRITO`, `ID_CLIENTE`) VALUES
+(1, 'Av. Larco', '123', 1, 1),
+(2, 'Av. Arequipa', '456', 2, 2),
+(3, 'Av. Tacna', '789', 1, 3),
+(4, 'Av. Grau', '321', 3, 4),
+(5, 'Av. Abancay', '654', 2, 5);
 
---
--- AUTO_INCREMENT de la tabla `usuario`
---
-ALTER TABLE `usuario`
-  MODIFY `ID_USUARIO` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-COMMIT;
+-- -----------------------------------------------------
+-- Datos para tabla `ventas_hamburguesa`.`proveedor`
+-- -----------------------------------------------------
+INSERT INTO `ventas_hamburguesa`.`proveedor` (`ID_PROVEEDOR`, `NOMBRE`, `RAZON_SOCIAL`, `NUMERO_DOCUMENTO`, `DIRECCION`, `TELEFONO`, `CORREO`, `SITIO_WEB`, `CONTACTO_NOMBRES`, `CONTACTO_APELLIDOS`) VALUES
+(1, 'Carnes Premium S.A.', 'Carnes Premium S.A.C.', '20123456789', 'Av. Industrial 123, Lima', '01-4567890', 'ventas@carnespremium.com', 'www.carnespremium.com', 'Juan', 'García'),
+(2, 'Panadería El Buen Pan', 'Panadería El Buen Pan E.I.R.L.', '20123456788', 'Jr. Panaderos 456, Lima', '01-4567891', 'ventas@elbuenpan.com', 'www.elbuenpan.com', 'María', 'López'),
+(3, 'Bebidas Refrescantes', 'Bebidas Refrescantes S.A.C.', '20123456787', 'Av. Bebidas 789, Lima', '01-4567892', 'ventas@bebidasrefrescantes.com', 'www.bebidasrefrescantes.com', 'Carlos', 'Rodríguez'),
+(4, 'Verduras Frescas', 'Verduras Frescas E.I.R.L.', '20123456786', 'Mercado Central 321, Lima', '01-4567893', 'ventas@verdurasfrescas.com', NULL, 'Ana', 'Martínez'),
+(5, 'Quesos Artesanales', 'Quesos Artesanales S.A.C.', '20123456785', 'Av. Lácteos 654, Lima', '01-4567894', 'ventas@quesosartesanales.com', 'www.quesosartesanales.com', 'Luis', 'Fernández');
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+USE `ventas_hamburguesa`;
+
+-- -----------------------------------------------------
+-- Datos para tabla `ventas_hamburguesa`.`categoria`
+-- -----------------------------------------------------
+INSERT INTO `ventas_hamburguesa`.`categoria` (`ID_CATEGORIA`, `NOMBRE`, `DESCRIPCION`, `ACTIVO`, `FECHA_CREACION`, `FECHA_ACTUALIZACION`) VALUES
+(1, 'Hamburguesas', 'Hamburguesas de carne, pollo y vegetarianas', 1, NOW(), NULL),
+(2, 'Combos', 'Combos que incluyen hamburguesa, papas y bebida', 1, NOW(), NULL),
+(3, 'Bebidas', 'Bebidas gaseosas, jugos y agua', 1, NOW(), NULL),
+(4, 'Acompañamientos', 'Papas fritas, ensaladas y otros acompañamientos', 1, NOW(), NULL),
+(5, 'Postres', 'Helados, tortas y otros postres', 1, NOW(), NULL);
+
+-- -----------------------------------------------------
+-- Datos para tabla `ventas_hamburguesa`.`usuario`
+-- -----------------------------------------------------
+INSERT INTO `ventas_hamburguesa`.`usuario` (`ID_USUARIO`, `NOMBRES`, `APELLIDOS`, `CORREO`, `CLAVE`, `ROL`, `ACTIVO`) VALUES
+(1, 'Carlos', 'Pérez Gomez', 'carlos@gmail.com', '$2y$10$yvY3RVvLugOzV5BGGbY6ve2VoaXdhyZz0mKTQivVT2SFjGlCwEn6q', 'ADMINISTRADOR', 1),
+(2, 'Lucía', 'Ramos Zevallos', 'lucia.ramos@hotmail.com', '$2y$10$yvY3RVvLugOzV5BGGbY6ve2VoaXdhyZz0mKTQivVT2SFjGlCwEn6q', 'GERENTE', 1),
+(3, 'Diego', 'Torres Buenaventura', 'diego.torres@outlook.com', '$2y$10$yvY3RVvLugOzV5BGGbY6ve2VoaXdhyZz0mKTQivVT2SFjGlCwEn6q', 'ASISTENTE', 1),
+(4, 'María', 'González Molina', 'maria.g@gmail.com', '$2y$10$yvY3RVvLugOzV5BGGbY6ve2VoaXdhyZz0mKTQivVT2SFjGlCwEn6q', 'ASISTENTE', 1),
+(5, 'Pedro', 'Salas Vargas', 'pedro.salas@yahoo.com', '$2y$10$yvY3RVvLugOzV5BGGbY6ve2VoaXdhyZz0mKTQivVT2SFjGlCwEn6q', 'ASISTENTE', 1);
+
+-- -----------------------------------------------------
+-- Datos para tabla `ventas_hamburguesa`.`producto`
+-- -----------------------------------------------------
+INSERT INTO `ventas_hamburguesa`.`producto` (`ID_PRODUCTO`, `CODIGO`, `NOMBRE`, `PRECIO`, `DESCRIPCIOON`, `IMAGEN_RUTA`, `STOCK`, `ACTIVO`, `FECHA_CREACION`, `FECHA_ACTUALIZACION`, `ID_CATEGORIA`, `ID_PROVEEDOR`) VALUES
+(1, 'HAM001', 'Hamburguesa Clásica', 15.90, 'Hamburguesa con carne, lechuga, tomate y mayonesa', 'images/pr1.png', 50, 1, NOW(), NULL, 1, 1),
+(2, 'HAM002', 'Hamburguesa con Queso', 22.50, 'Hamburguesa con carne, queso cheddar, lechuga y tomate', 'images/pr2.png', 45, 1, NOW(), NULL, 1, 1),
+(3, 'HAM003', 'Hamburguesa Doble Carne', 15.00, 'Hamburguesa con doble carne, lechuga y tomate', 'images/pr3.png', 40, 1, NOW(), NULL, 1, 1),
+(4, 'COM001', 'Combo Clásico', 25.00, 'Hamburguesa clásica con papas fritas y bebida', 'images/pr4.png', 30, 1, NOW(), NULL, 2, 1),
+(5, 'COM002', 'Combo Doble', 32.00, 'Hamburguesa doble carne con papas fritas y bebida', 'images/pr5.png', 25, 1, NOW(), NULL, 2, 1),
+(6, 'COM003', 'Combo Familiar', 45.00, '2 hamburguesas, papas fritas grandes y 2 bebidas', 'images/pr6.png', 20, 1, NOW(), NULL, 2, 1),
+(7, 'BEB001', 'Pepsi Jumbo', 8.00, 'Pepsi 500ml', 'images/bebida1.png', 100, 1, NOW(), NULL, 3, 3),
+(8, 'BEB002', 'Inca Kola 500ml', 5.00, 'Inca Kola 500ml', 'images/bebida2.png', 80, 1, NOW(), NULL, 3, 3),
+(9, 'BEB003', 'Agua mineral sin gas 500ml', 3.00, 'Agua mineral sin gas 500ml', 'images/bebida3.png', 120, 1, NOW(), NULL, 3, 3),
+(10, 'ACO001', 'Papas Fritas', 8.50, 'Papas fritas crujientes', 'images/pr7.png', 60, 1, NOW(), NULL, 4, 2);
+
+-- -----------------------------------------------------
+-- Datos para tabla `ventas_hamburguesa`.`pedido`
+-- -----------------------------------------------------
+INSERT INTO `ventas_hamburguesa`.`pedido` (`ID_PEDIDO`, `METODO_PAGO`, `FECHA_PEDIDO`, `TOTAL`, `ID_CLIENTE`, `ESTADO`, `OBSERVACIONES`, `FECHA_ENTREGA`, `FECHA_CREACION`, `FECHA_ACTUALIZACION`, `ID_USUARIO`) VALUES
+(1, 'EFECTIVO', '2025-08-01', 23.90, 1, 'LISTO', 'Sin cebolla', '2025-08-01 14:30:00', NOW(), NULL, 1),
+(2, 'TARJETA', '2025-07-20', 30.50, 2, 'LISTO', 'Extra queso', '2025-07-20 19:15:00', NOW(), NULL, 2),
+(3, 'YAPE', '2025-07-31', 15.00, 3, 'LISTO', NULL, '2025-07-31 12:45:00', NOW(), NULL, 3),
+(4, 'EFECTIVO', '2025-08-03', 45.75, 1, 'PENDIENTE', 'Para llevar', '2025-08-03 20:00:00', NOW(), NULL, 1),
+(5, 'TARJETA', '2025-08-04', 18.00, 4, 'PENDIENTE', NULL, '2025-08-04 18:30:00', NOW(), NULL, 4),
+(6, 'YAPE', '2025-08-04', 32.00, 5, 'PENDIENTE', 'Sin papas', '2025-08-04 21:00:00', NOW(), NULL, 5);
+
+-- -----------------------------------------------------
+-- Datos para tabla `ventas_hamburguesa`.`pedido_detalle`
+-- -----------------------------------------------------
+INSERT INTO `ventas_hamburguesa`.`pedido_detalle` (`ID_PEDIDO_DETALLE`, `CANTIDAD`, `ID_PEDIDO`, `ID_PRODUCTO`, `PRECIO_UNITARIO`, `SUBTOTAL`, `OBSERVACIONES`) VALUES
+(1, 1, 1, 1, 15.90, 15.90, 'Sin cebolla'),
+(2, 1, 1, 7, 8.00, 8.00, NULL),
+(3, 1, 2, 2, 22.50, 22.50, 'Extra queso'),
+(4, 1, 2, 7, 8.00, 8.00, NULL),
+(5, 1, 3, 3, 15.00, 15.00, NULL),
+(6, 2, 4, 1, 15.90, 31.80, NULL),
+(7, 1, 4, 2, 13.95, 13.95, NULL),
+(8, 2, 5, 9, 3.00, 6.00, NULL),
+(9, 1, 6, 5, 32.00, 32.00, 'Sin papas');
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

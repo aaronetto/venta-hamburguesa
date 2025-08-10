@@ -33,10 +33,45 @@ $nombre = $_SESSION['usuario'];
         }
         
         .admin-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .admin-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .section-header {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e53e2e;
+        }
+        
+        .section-title {
+            color: #e53e2e;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-description {
+            color: #666;
+            font-size: 14px;
+            margin: 5px 0 0 0;
+        }
+        
+        .section-cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
-            margin-bottom: 30px;
         }
         
         .admin-card {
@@ -152,6 +187,11 @@ $nombre = $_SESSION['usuario'];
         $query_usu = "SELECT COUNT(*) as total FROM usuario";
         $result_usu = $conexion->query($query_usu);
         $total_usuarios = $result_usu->fetch_assoc()['total'];
+        
+        // Contar clientes
+        $query_cli = "SELECT COUNT(*) as total FROM cliente";
+        $result_cli = $conexion->query($query_cli);
+        $total_clientes = $result_cli->fetch_assoc()['total'];
         ?>
 
         <div class="stats-grid">
@@ -171,37 +211,107 @@ $nombre = $_SESSION['usuario'];
                 <div class="stat-number"><?php echo $total_usuarios; ?></div>
                 <div class="stat-label">Usuarios</div>
             </div>
+            <div class="stat-card">
+                <div class="stat-number"><?php echo $total_clientes; ?></div>
+                <div class="stat-label">Clientes</div>
+            </div>
         </div>
 
         <div class="admin-menu">
-            <!-- Gestión de Categorías -->
-            <div class="admin-card">
-                <h3>📂 Gestión de Categorías</h3>
-                <p>Administra las categorías de productos del sistema</p>
-                <a href="admin/categorias.php" class="admin-btn">Gestionar Categorías</a>
+            <!-- Sección Productos -->
+            <div class="admin-section">
+                <div class="section-header">
+                    <h2 class="section-title">🍔 Sección Productos</h2>
+                    <p class="section-description">Administra todo lo relacionado con productos, categorías y proveedores</p>
+                </div>
+                <div class="section-cards">
+                    <div class="admin-card">
+                        <h3>📂 Gestión de Categorías</h3>
+                        <p>Administra las categorías de productos del sistema</p>
+                        <a href="admin/categorias/" class="admin-btn">Gestionar Categorías</a>
+                    </div>
+                    <div class="admin-card">
+                        <h3>🍔 Gestión de Productos</h3>
+                        <p>Administra los productos y sus características</p>
+                        <a href="admin/productos/" class="admin-btn">Gestionar Productos</a>
+                    </div>
+                    <div class="admin-card">
+                        <h3>🏢 Gestión de Proveedores</h3>
+                        <p>Administra los proveedores del sistema</p>
+                        <a href="admin/proveedores/" class="admin-btn">Gestionar Proveedores</a>
+                    </div>
+                </div>
             </div>
 
-            <!-- Gestión de Productos -->
-            <div class="admin-card">
-                <h3>🍔 Gestión de Productos</h3>
-                <p>Administra los productos y sus características</p>
-                <a href="admin/productos.php" class="admin-btn">Gestionar Productos</a>
+            <!-- Sección Clientes -->
+            <div class="admin-section">
+                <div class="section-header">
+                    <h2 class="section-title">👤 Sección Clientes</h2>
+                    <p class="section-description">Administra la información de los clientes</p>
+                </div>
+                <div class="section-cards">
+                    <div class="admin-card">
+                        <h3>👤 Gestión de Clientes</h3>
+                        <p>Administra los clientes y sus direcciones</p>
+                        <a href="admin/clientes/" class="admin-btn">Gestionar Clientes</a>
+                    </div>
+                </div>
             </div>
 
-            <!-- Gestión de Pedidos -->
-            <div class="admin-card">
-                <h3>🛒 Gestión de Pedidos</h3>
-                <p>Administra los pedidos y sus detalles</p>
-                <a href="admin/pedidos.php" class="admin-btn">Gestionar Pedidos</a>
+            <!-- Sección Pedidos -->
+            <div class="admin-section">
+                <div class="section-header">
+                    <h2 class="section-title">🛒 Sección Pedidos</h2>
+                    <p class="section-description">Administra los pedidos y sus detalles</p>
+                </div>
+                <div class="section-cards">
+                    <div class="admin-card">
+                        <h3>🛒 Gestión de Pedidos</h3>
+                        <p>Administra los pedidos y sus detalles</p>
+                        <a href="admin/pedidos/" class="admin-btn">Gestionar Pedidos</a>
+                    </div>
+                </div>
             </div>
 
-            <!-- Gestión de Usuarios -->
-            <div class="admin-card">
-                <h3>👥 Gestión de Usuarios</h3>
-                <p>Administra los usuarios del sistema</p>
-                <a href="admin/usuarios.php" class="admin-btn">Gestionar Usuarios</a>
+            <!-- Sección Usuarios -->
+            <div class="admin-section">
+                <div class="section-header">
+                    <h2 class="section-title">👥 Sección Usuarios</h2>
+                    <p class="section-description">Administra los usuarios del sistema</p>
+                </div>
+                <div class="section-cards">
+                    <div class="admin-card">
+                        <h3>👥 Gestión de Usuarios</h3>
+                        <p>Administra los usuarios del sistema</p>
+                        <a href="admin/usuarios/" class="admin-btn">Gestionar Usuarios</a>
+                    </div>
+                </div>
             </div>
 
+            <!-- Sección Mantenimiento -->
+            <div class="admin-section">
+                <div class="section-header">
+                    <h2 class="section-title">🔧 Sección Mantenimiento</h2>
+                    <p class="section-description">Administra las configuraciones geográficas del sistema</p>
+                </div>
+                <div class="section-cards">
+                    <div class="admin-card">
+                        <h3>🏙️ Gestión de Ciudades</h3>
+                        <p>Administra las ciudades del sistema</p>
+                        <a href="admin/ciudades/" class="admin-btn">Gestionar Ciudades</a>
+                    </div>
+                    <div class="admin-card">
+                        <h3>🏛️ Gestión de Provincias</h3>
+                        <p>Administra las provincias del sistema</p>
+                        <a href="admin/provincias/" class="admin-btn">Gestionar Provincias</a>
+                    </div>
+                    <div class="admin-card">
+                        <h3>🏘️ Gestión de Distritos</h3>
+                        <p>Administra los distritos del sistema</p>
+                        <a href="admin/distritos/" class="admin-btn">Gestionar Distritos</a>
+                    </div>
+                </div>
+            </div>
 
         </div>
 
