@@ -6,7 +6,18 @@ if (!isset($_SESSION['usuario'])) {
     exit();
 }
 
+require_once 'auth_functions.php';
+
 $nombre = $_SESSION['usuario'];
+$rol = obtenerRolUsuario();
+$rol_nombre = obtenerNombreRol($rol);
+$modulos_disponibles = obtenerModulosDisponibles();
+
+// Procesar mensajes de error
+$mensaje_error = '';
+if (isset($_GET['error']) && $_GET['error'] === 'acceso_denegado') {
+    $mensaje_error = '❌ No tienes permisos para acceder a ese módulo.';
+}
 ?>
 
 <!DOCTYPE html>
@@ -161,7 +172,14 @@ $nombre = $_SESSION['usuario'];
         <div class="admin-header">
             <h1>🍔 Panel de Administración</h1>
             <p>Bienvenido, <?php echo htmlspecialchars($nombre); ?> 👋</p>
+            <p><strong>Rol:</strong> <?php echo htmlspecialchars($rol_nombre); ?></p>
         </div>
+
+        <?php if (!empty($mensaje_error)): ?>
+        <div style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px; margin-bottom: 20px; text-align: center;">
+            <?php echo htmlspecialchars($mensaje_error); ?>
+        </div>
+        <?php endif; ?>
 
         <?php
         // Obtener estadísticas básicas
@@ -218,6 +236,7 @@ $nombre = $_SESSION['usuario'];
         </div>
 
         <div class="admin-menu">
+            <?php if (tieneAccesoModulo('categorias') || tieneAccesoModulo('productos') || tieneAccesoModulo('proveedores')): ?>
             <!-- Sección Productos -->
             <div class="admin-section">
                 <div class="section-header">
@@ -225,24 +244,32 @@ $nombre = $_SESSION['usuario'];
                     <p class="section-description">Administra todo lo relacionado con productos, categorías y proveedores</p>
                 </div>
                 <div class="section-cards">
+                    <?php if (tieneAccesoModulo('categorias')): ?>
                     <div class="admin-card">
                         <h3>📂 Gestión de Categorías</h3>
                         <p>Administra las categorías de productos del sistema</p>
                         <a href="admin/categorias/" class="admin-btn">Gestionar Categorías</a>
                     </div>
+                    <?php endif; ?>
+                    <?php if (tieneAccesoModulo('productos')): ?>
                     <div class="admin-card">
                         <h3>🍔 Gestión de Productos</h3>
                         <p>Administra los productos y sus características</p>
                         <a href="admin/productos/" class="admin-btn">Gestionar Productos</a>
                     </div>
+                    <?php endif; ?>
+                    <?php if (tieneAccesoModulo('proveedores')): ?>
                     <div class="admin-card">
                         <h3>🏢 Gestión de Proveedores</h3>
                         <p>Administra los proveedores del sistema</p>
                         <a href="admin/proveedores/" class="admin-btn">Gestionar Proveedores</a>
                     </div>
+                    <?php endif; ?>
                 </div>
             </div>
+            <?php endif; ?>
 
+            <?php if (tieneAccesoModulo('clientes')): ?>
             <!-- Sección Clientes -->
             <div class="admin-section">
                 <div class="section-header">
@@ -257,7 +284,9 @@ $nombre = $_SESSION['usuario'];
                     </div>
                 </div>
             </div>
+            <?php endif; ?>
 
+            <?php if (tieneAccesoModulo('pedidos')): ?>
             <!-- Sección Pedidos -->
             <div class="admin-section">
                 <div class="section-header">
@@ -272,7 +301,9 @@ $nombre = $_SESSION['usuario'];
                     </div>
                 </div>
             </div>
+            <?php endif; ?>
 
+            <?php if (tieneAccesoModulo('usuarios')): ?>
             <!-- Sección Usuarios -->
             <div class="admin-section">
                 <div class="section-header">
@@ -287,7 +318,9 @@ $nombre = $_SESSION['usuario'];
                     </div>
                 </div>
             </div>
+            <?php endif; ?>
 
+            <?php if (tieneAccesoModulo('ciudades') || tieneAccesoModulo('provincias') || tieneAccesoModulo('distritos')): ?>
             <!-- Sección Mantenimiento -->
             <div class="admin-section">
                 <div class="section-header">
@@ -295,23 +328,30 @@ $nombre = $_SESSION['usuario'];
                     <p class="section-description">Administra las configuraciones geográficas del sistema</p>
                 </div>
                 <div class="section-cards">
+                    <?php if (tieneAccesoModulo('ciudades')): ?>
                     <div class="admin-card">
                         <h3>🏙️ Gestión de Ciudades</h3>
                         <p>Administra las ciudades del sistema</p>
                         <a href="admin/ciudades/" class="admin-btn">Gestionar Ciudades</a>
                     </div>
+                    <?php endif; ?>
+                    <?php if (tieneAccesoModulo('provincias')): ?>
                     <div class="admin-card">
                         <h3>🏛️ Gestión de Provincias</h3>
                         <p>Administra las provincias del sistema</p>
                         <a href="admin/provincias/" class="admin-btn">Gestionar Provincias</a>
                     </div>
+                    <?php endif; ?>
+                    <?php if (tieneAccesoModulo('distritos')): ?>
                     <div class="admin-card">
                         <h3>🏘️ Gestión de Distritos</h3>
                         <p>Administra los distritos del sistema</p>
                         <a href="admin/distritos/" class="admin-btn">Gestionar Distritos</a>
                     </div>
+                    <?php endif; ?>
                 </div>
             </div>
+            <?php endif; ?>
 
         </div>
 

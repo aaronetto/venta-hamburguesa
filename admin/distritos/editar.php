@@ -1,13 +1,10 @@
 <?php
 session_start();
-
-// Verificar si el usuario está logueado y es administrador
-if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'ADMINISTRADOR') {
-    header('Location: ../../login_registro.php');
-    exit();
-}
-
 require_once '../../config.php';
+require_once '../../auth_functions.php';
+
+// Verificar acceso al módulo
+requerirAccesoModulo('distritos');
 $conexion = getConnection();
 
 $error = '';

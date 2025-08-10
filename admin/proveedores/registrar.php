@@ -1,12 +1,10 @@
 <?php
 session_start();
 require_once '../../config.php';
+require_once '../../auth_functions.php';
 
-// Verificar si el usuario está logueado
-if (!isset($_SESSION['usuario'])) {
-    header("Location: ../../login_registro.php");
-    exit();
-}
+// Verificar acceso al módulo
+requerirAccesoModulo('proveedores');
 
 $conexion = getConnection();
 $mensaje = '';
