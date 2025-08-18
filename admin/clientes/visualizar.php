@@ -467,7 +467,7 @@ $distritos_result = $conexion->query($distritos_query);
                 <div class="info-grid">
                     <div class="info-item">
                         <span class="info-label">Nombre Completo</span>
-                        <span class="info-value"><?php echo htmlspecialchars($cliente['NOMBRE'] . ' ' . $cliente['APELLIDOS']); ?></span>
+                        <span class="info-value"><?php echo htmlspecialchars($cliente['NOMBRES'] . ' ' . $cliente['APELLIDOS']); ?></span>
                     </div>
                     <div class="info-item">
                         <span class="info-label">Correo Electrónico</span>

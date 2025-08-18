@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 
                 if (empty($error)) {
                     // Insertar nuevo producto
-                    $stmt = $conexion->prepare("INSERT INTO producto (CODIGO, NOMBRE, PRECIO, DESCRIPCIOON, IMAGEN_RUTA, STOCK, ACTIVO, FECHA_CREACION, ID_CATEGORIA, ID_PROVEEDOR) VALUES (?, ?, ?, ?, ?, ?, 1, NOW(), ?, ?)");
+                    $stmt = $conexion->prepare("INSERT INTO producto (CODIGO, NOMBRE, PRECIO, DESCRIPCION, IMAGEN_RUTA, STOCK, ACTIVO, FECHA_CREACION, ID_CATEGORIA, ID_PROVEEDOR) VALUES (?, ?, ?, ?, ?, ?, 1, NOW(), ?, ?)");
                     $stmt->bind_param("ssdssiii", $codigo, $nombre, $precio, $descripcion, $imagen_ruta, $stock, $categoria, $proveedor);
                     
                     if ($stmt->execute()) {

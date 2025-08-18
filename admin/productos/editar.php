@@ -20,7 +20,7 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
 $id = (int)$_GET['id'];
 
 // Obtener datos del producto
-$stmt = $conexion->prepare("SELECT ID_PRODUCTO, CODIGO, NOMBRE, PRECIO, DESCRIPCIOON, IMAGEN_RUTA, STOCK, ACTIVO, ID_CATEGORIA, ID_PROVEEDOR FROM producto WHERE ID_PRODUCTO = ?");
+$stmt = $conexion->prepare("SELECT ID_PRODUCTO, CODIGO, NOMBRE, PRECIO, DESCRIPCION, IMAGEN_RUTA, STOCK, ACTIVO, ID_CATEGORIA, ID_PROVEEDOR FROM producto WHERE ID_PRODUCTO = ?");
 $stmt->bind_param("i", $id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -112,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 
                 if (empty($error)) {
                     // Actualizar producto
-                    $stmt = $conexion->prepare("UPDATE producto SET CODIGO = ?, NOMBRE = ?, PRECIO = ?, DESCRIPCIOON = ?, IMAGEN_RUTA = ?, STOCK = ?, ACTIVO = ?, FECHA_ACTUALIZACION = NOW(), ID_CATEGORIA = ?, ID_PROVEEDOR = ? WHERE ID_PRODUCTO = ?");
+                    $stmt = $conexion->prepare("UPDATE producto SET CODIGO = ?, NOMBRE = ?, PRECIO = ?, DESCRIPCION = ?, IMAGEN_RUTA = ?, STOCK = ?, ACTIVO = ?, FECHA_ACTUALIZACION = NOW(), ID_CATEGORIA = ?, ID_PROVEEDOR = ? WHERE ID_PRODUCTO = ?");
                     $stmt->bind_param("ssdssiiiii", $codigo, $nombre, $precio, $descripcion, $imagen_ruta, $stock, $activo, $categoria, $proveedor, $id);
                     
                     if ($stmt->execute()) {
@@ -121,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $producto['CODIGO'] = $codigo;
                         $producto['NOMBRE'] = $nombre;
                         $producto['PRECIO'] = $precio;
-                        $producto['DESCRIPCIOON'] = $descripcion;
+                        $producto['DESCRIPCION'] = $descripcion;
                         $producto['IMAGEN_RUTA'] = $imagen_ruta;
                         $producto['STOCK'] = $stock;
                         $producto['ACTIVO'] = $activo;
@@ -309,7 +309,7 @@ $conexion->close();
                 <div class="form-group">
                     <label for="descripcion">Descripción:</label>
                     <textarea id="descripcion" name="descripcion" maxlength="1000"
-                              placeholder="Descripción detallada del producto..."><?php echo htmlspecialchars($producto['DESCRIPCIOON']); ?></textarea>
+                              placeholder="Descripción detallada del producto..."><?php echo htmlspecialchars($producto['DESCRIPCION']); ?></textarea>
                 </div>
                 
                 <div class="form-group">

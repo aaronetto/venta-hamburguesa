@@ -212,7 +212,7 @@
                 </div>
                 <button type="submit" class="btn">Registrarse</button>
             </form>
-            <p>¿Desea volver al Inicio? <a href="index.html">Haz click Aquí</a></p>
+            <p>¿Desea volver al Inicio? <a href="/">Haz click Aquí</a></p>
         </div>
     </div>
 

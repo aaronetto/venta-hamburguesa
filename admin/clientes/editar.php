@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $error = "Ya existe otro cliente con ese correo electrónico";
         } else {
             // Actualizar el cliente
-            $stmt = $conexion->prepare("UPDATE cliente SET NOMBRE = ?, APELLIDOS = ?, CORREO = ?, TELEFONO = ?, DIRECCION = ? WHERE ID_CLIENTE = ?");
+            $stmt = $conexion->prepare("UPDATE cliente SET NOMBRES = ?, APELLIDOS = ?, CORREO = ?, TELEFONO = ?, DIRECCION = ? WHERE ID_CLIENTE = ?");
             $stmt->bind_param("sssssi", $nombre, $apellidos, $correo, $telefono, $direccion, $id_cliente);
             
             if ($stmt->execute()) {
@@ -254,7 +254,7 @@ $cliente = $result->fetch_assoc();
                             <div class="form-group">
                                 <label for="nombre">Nombre <span class="required">*</span></label>
                                 <input type="text" id="nombre" name="nombre" 
-                                       value="<?php echo htmlspecialchars($_POST['nombre'] ?? $cliente['NOMBRE']); ?>" 
+                                       value="<?php echo htmlspecialchars($_POST['nombre'] ?? $cliente['NOMBRES']); ?>" 
                                        maxlength="45" required>
                             </div>
 

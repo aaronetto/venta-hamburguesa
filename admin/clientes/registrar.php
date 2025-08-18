@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $error = "Ya existe un cliente con ese correo electrónico";
         } else {
             // Insertar el nuevo cliente
-            $stmt = $conexion->prepare("INSERT INTO cliente (NOMBRE, APELLIDOS, CORREO, TELEFONO, DIRECCION) VALUES (?, ?, ?, ?, ?)");
+            $stmt = $conexion->prepare("INSERT INTO cliente (NOMBRES, APELLIDOS, CORREO, TELEFONO, DIRECCION) VALUES (?, ?, ?, ?, ?)");
             $stmt->bind_param("sssss", $nombre, $apellidos, $correo, $telefono, $direccion);
             
             if ($stmt->execute()) {

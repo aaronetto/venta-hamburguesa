@@ -320,8 +320,8 @@ $conexion->close();
                                 </td>
                                 <td><strong><?php echo htmlspecialchars($row['CODIGO']); ?></strong></td>
                                 <td><strong><?php echo htmlspecialchars($row['NOMBRE']); ?></strong></td>
-                                <td class="descripcion" title="<?php echo htmlspecialchars($row['DESCRIPCIOON']); ?>">
-                                    <?php echo htmlspecialchars($row['DESCRIPCIOON'] ?: 'Sin descripción'); ?>
+                                <td class="descripcion" title="<?php echo htmlspecialchars($row['DESCRIPCION']); ?>">
+                                    <?php echo htmlspecialchars($row['DESCRIPCION'] ?: 'Sin descripción'); ?>
                                 </td>
                                 <td><?php echo htmlspecialchars($row['CATEGORIA_NOMBRE']); ?></td>
                                 <td><?php echo htmlspecialchars($row['PROVEEDOR_NOMBRE']); ?></td>

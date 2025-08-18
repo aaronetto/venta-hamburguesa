@@ -80,7 +80,7 @@ $query = "SELECT c.*,
           (SELECT COUNT(*) FROM pedido WHERE ID_CLIENTE = c.ID_CLIENTE) as total_pedidos,
           (SELECT COUNT(*) FROM direccion_cliente WHERE ID_CLIENTE = c.ID_CLIENTE) as total_direcciones
           FROM cliente c 
-          ORDER BY c.NOMBRE, c.APELLIDOS";
+          ORDER BY c.NOMBRES, c.APELLIDOS";
 $result = $conexion->query($query);
 ?>
 
@@ -307,7 +307,7 @@ $result = $conexion->query($query);
                                 <td><?php echo $row['ID_CLIENTE']; ?></td>
                                 <td>
                                     <div class="client-name">
-                                        <?php echo htmlspecialchars($row['NOMBRE'] . ' ' . $row['APELLIDOS']); ?>
+                                        <?php echo htmlspecialchars($row['NOMBRES'] . ' ' . $row['APELLIDOS']); ?>
                                     </div>
                                 </td>
                                 <td>
@@ -343,7 +343,7 @@ $result = $conexion->query($query);
                                         <a href="editar.php?id=<?php echo $row['ID_CLIENTE']; ?>" class="btn btn-warning">
                                             ✏️ Editar
                                         </a>
-                                        <button class="btn btn-danger" onclick="eliminarCliente(<?php echo $row['ID_CLIENTE']; ?>, '<?php echo htmlspecialchars($row['NOMBRE'] . ' ' . $row['APELLIDOS']); ?>')">
+                                        <button class="btn btn-danger" onclick="eliminarCliente(<?php echo $row['ID_CLIENTE']; ?>, '<?php echo htmlspecialchars($row['NOMBRES'] . ' ' . $row['APELLIDOS']); ?>')">
                                             🗑️ Eliminar
                                         </button>
                                     </div>
